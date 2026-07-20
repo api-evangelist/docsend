@@ -1,0 +1,37 @@
+generated: '2026-07-18'
+method: searched
+source: >-
+  https://docsend.com/.well-known/oauth-authorization-server (RFC 8414) +
+  WWW-Authenticate challenge on https://mcp.docsend.com/mcp
+summary:
+  types: [oauth2]
+  oauth2_flows: [authorizationCode, clientCredentials, refreshToken]
+  pkce: S256
+  dynamic_client_registration: true
+schemes:
+- name: OAuth2
+  type: oauth2
+  sources: [well-known/docsend-oauth-authorization-server.json]
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://docsend.com/oauth/authorize
+    tokenUrl: https://docsend.com/oauth/token
+    refreshUrl: https://docsend.com/oauth/token
+    scopes:
+      mcp:read: Read access via the DocSend MCP server
+      mcp:write: Write access via the DocSend MCP server
+  - flow: clientCredentials
+    tokenUrl: https://docsend.com/oauth/token
+    scopes:
+      mcp:read: Read access via the DocSend MCP server
+      mcp:write: Write access via the DocSend MCP server
+  registration_endpoint: https://docsend.com/oauth/register
+  revocation_endpoint: https://docsend.com/oauth/revoke
+  code_challenge_methods: [S256]
+  token_endpoint_auth_methods: [none]
+notes: >-
+  DocSend exposes an OAuth 2.0 authorization server (RFC 8414 discovery) with
+  dynamic client registration (RFC 7591) and mandatory PKCE (S256). It currently
+  gates the hosted MCP server (mcp:read / mcp:write scopes). No general public
+  REST API OpenAPI was found; this profile derives from the published OAuth
+  discovery metadata.
