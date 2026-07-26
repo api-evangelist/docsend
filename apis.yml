@@ -1,8 +1,29 @@
 aid: docsend
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
+image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/docsend.png
 name: DocSend
-description: 'DocSend is a company surfaced as a portfolio company of cowboy-ventures, dcm-ventures, uncork-capital
-  and added to the API Evangelist network as a stub for enrichment. Sector: enterprise. This profile is
-  a lead awaiting the enrichment pipeline.'
+description: >-
+  DocSend is a secure document sharing and analytics platform, now part of
+  Dropbox, used by sales, marketing, and fundraising teams to share pitch decks,
+  sales collateral, and confidential documents through trackable links. It
+  provides page-by-page viewer analytics, granular access controls (email
+  verification, passcodes, expiration, watermarking), virtual data rooms, and
+  e-signature. DocSend was surfaced as a portfolio company of Cowboy Ventures,
+  DCM Ventures, and Uncork Capital and enriched by the API Evangelist pipeline.
+  Enrichment confirmed a live, OAuth-secured hosted Model Context Protocol (MCP)
+  server at mcp.docsend.com backed by RFC 8414 authorization-server discovery,
+  dynamic client registration (RFC 7591), and PKCE.
 url: https://raw.githubusercontent.com/api-evangelist/docsend/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -14,10 +35,17 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-18'
 tags:
 - Company
 - Enterprise
+- Document Sharing
+- Sales Enablement
+- Analytics
+- Data Room
+- E-Signature
+- MCP
+- Dropbox
 apis: []
 maintainers:
 - FN: Kin Lane
@@ -25,5 +53,28 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: MCPServer
+  url: mcp/docsend-mcp.yml
+- type: WellKnown
+  url: well-known/docsend-well-known.yml
+- type: Authentication
+  url: authentication/docsend-authentication.yml
+- type: OAuthScopes
+  url: scopes/docsend-scopes.yml
+- type: Conformance
+  url: conformance/docsend-conformance.yml
+- type: Compliance
+  url: security/docsend-trust-center.yml
+- type: TrustCenter
+  url: security/docsend-trust-center.yml
+- type: DomainSecurity
+  url: security/docsend-domain-security.yml
+- type: LLMsTxt
+  url: llms/docsend-llms.txt
 - type: Website
   url: https://www.docsend.com
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

@@ -1,0 +1,32 @@
+generated: '2026-07-18'
+method: searched
+status: published
+source: >-
+  live probe of https://mcp.docsend.com/mcp (HTTP 401 with RFC 9728-style
+  WWW-Authenticate Bearer challenge) + RFC 8414 metadata at
+  https://mcp.docsend.com/.well-known/oauth-authorization-server
+server:
+  name: docsend
+  transport: http            # Streamable HTTP JSON-RPC (POST /mcp)
+  url: https://mcp.docsend.com/mcp
+  hosting: Heroku
+auth:
+  type: oauth2
+  required: true             # unauthenticated initialize returns HTTP 401
+  www_authenticate: >-
+    Bearer realm="mcp", resource_metadata="https://docsend.com/.well-known/oauth-authorization-server", scope="mcp:read mcp:write"
+  authorization_server_metadata:
+    docsend.com: https://docsend.com/.well-known/oauth-authorization-server
+    mcp.docsend.com: https://mcp.docsend.com/.well-known/oauth-authorization-server
+  authorization_endpoint: https://docsend.com/oauth/authorize
+  token_endpoint: https://docsend.com/oauth/token
+  registration_endpoint: https://docsend.com/oauth/register   # dynamic client registration (RFC 7591)
+  revocation_endpoint: https://docsend.com/oauth/revoke
+  grant_types: [authorization_code, client_credentials, refresh_token]
+  code_challenge_methods: [S256]                              # PKCE required
+  scopes: [mcp:read, mcp:write]
+tools: []
+tools_note: >-
+  The tool list is behind the OAuth bearer requirement (mcp:read / mcp:write);
+  it could not be enumerated without an authorized token. The server is
+  confirmed live and published (401 auth challenge, not 404).

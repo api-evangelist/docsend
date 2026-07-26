@@ -1,0 +1,15 @@
+generated: '2026-07-18'
+method: searched
+probe: true
+source: https://www.docsend.com/
+url: https://www.docsend.com/
+certifications:
+- PCI DSS
+- GDPR
+evidence:
+- source: https://www.docsend.com/
+  keywords:
+  - pci dss
+  - pci-dss
+  - trust center
+  - gdpr

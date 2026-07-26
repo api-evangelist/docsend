@@ -1,0 +1,23 @@
+generated: '2026-07-18'
+method: searched
+source: >-
+  https://docsend.com/.well-known/oauth-authorization-server (scopes_supported)
+  + WWW-Authenticate scope challenge on https://mcp.docsend.com/mcp
+schemes:
+- name: OAuth2
+  source: well-known/docsend-oauth-authorization-server.json
+  flows:
+  - flow: authorizationCode
+    authorizationUrl: https://docsend.com/oauth/authorize
+    tokenUrl: https://docsend.com/oauth/token
+  - flow: clientCredentials
+    tokenUrl: https://docsend.com/oauth/token
+scopes:
+- scope: mcp:read
+  description: Read access exposed through the DocSend hosted MCP server.
+  flows: [authorizationCode, clientCredentials]
+  sources: [well-known/docsend-oauth-authorization-server.json]
+- scope: mcp:write
+  description: Write access exposed through the DocSend hosted MCP server.
+  flows: [authorizationCode, clientCredentials]
+  sources: [well-known/docsend-oauth-authorization-server.json]

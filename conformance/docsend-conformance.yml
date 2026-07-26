@@ -1,0 +1,33 @@
+generated: '2026-07-18'
+method: searched
+source: >-
+  RFC 8414 metadata at docsend.com + mcp.docsend.com; MCP auth challenge on
+  mcp.docsend.com/mcp; trust-center compliance keywords (security/docsend-trust-center.yml)
+standards:
+- id: oauth2
+  conforms: true
+  evidence: OAuth 2.0 authorization server with authorize/token/revoke endpoints
+- id: rfc8414-oauth-authorization-server-metadata
+  conforms: true
+  evidence: /.well-known/oauth-authorization-server returns 200 with issuer + endpoints
+- id: rfc7591-dynamic-client-registration
+  conforms: true
+  evidence: registration_endpoint https://docsend.com/oauth/register advertised
+- id: rfc7636-pkce
+  conforms: true
+  evidence: code_challenge_methods_supported = ["S256"]
+- id: rfc7009-oauth-token-revocation
+  conforms: true
+  evidence: revocation_endpoint https://docsend.com/oauth/revoke advertised
+- id: model-context-protocol
+  conforms: true
+  evidence: hosted MCP server at https://mcp.docsend.com/mcp with mcp:read/mcp:write scopes
+- id: oidc
+  conforms: false
+  evidence: /.well-known/openid-configuration returns 404
+- id: pci-dss
+  conforms: true
+  evidence: PCI DSS referenced on docsend.com (see security/docsend-trust-center.yml)
+- id: gdpr
+  conforms: true
+  evidence: GDPR referenced on docsend.com (see security/docsend-trust-center.yml)
