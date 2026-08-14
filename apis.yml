@@ -1,16 +1,23 @@
 aid: docsend
 accessModel:
-  pricing: unknown
+  pricing: paid
   onboarding: self-serve
-  trial: false
+  trial: true
   try_now: false
   public: false
-  label: Self-serve signup
-  confidence: medium
+  label: Self-serve signup, paid plans from $30/user/month
+  confidence: high
   source:
+  - https://www.docsend.com/pricing/
+  - https://www.docsend.com/signup
   - authentication
-  generated: '2026-07-22'
-  method: derived
+  generated: '2026-08-14'
+  method: searched
+  note: >-
+    Upgraded from derived/unknown. The pricing page was read directly on 2026-08-14: three
+    self-serve tiers (Standard $30/user/month, Advanced $150/month, Advanced Data Rooms
+    $180/month) each with a "Get Started Free" trial, plus Contact Sales above that. The
+    API/MCP surface itself is not sold or documented at any tier.
 image: https://kinlane-images.s3.amazonaws.com/shared/apis-json/icons/docsend.png
 name: DocSend
 description: >-
@@ -21,9 +28,13 @@ description: >-
   verification, passcodes, expiration, watermarking), virtual data rooms, and
   e-signature. DocSend was surfaced as a portfolio company of Cowboy Ventures,
   DCM Ventures, and Uncork Capital and enriched by the API Evangelist pipeline.
-  Enrichment confirmed a live, OAuth-secured hosted Model Context Protocol (MCP)
-  server at mcp.docsend.com backed by RFC 8414 authorization-server discovery,
-  dynamic client registration (RFC 7591), and PKCE.
+  DocSend publishes no public REST API and no OpenAPI; its only programmatic
+  surface is a live, OAuth-secured hosted Model Context Protocol (MCP) server at
+  https://docsend.com/mcp, backed by RFC 8414 authorization-server discovery, RFC
+  9728 protected-resource metadata, dynamic client registration (RFC 7591), and
+  mandatory PKCE. In August 2026 DocSend replaced the server's two coarse
+  mcp:read / mcp:write scopes with five resource-scoped ones — documents:read,
+  spaces:read, spaces:write, analytics:read, contacts:read.
 url: https://raw.githubusercontent.com/api-evangelist/docsend/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -35,7 +46,7 @@ x-tier: stub
 x-tier-reason: portfolio-lead
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-18'
+modified: '2026-08-14'
 tags:
 - Company
 - Enterprise
@@ -46,7 +57,42 @@ tags:
 - E-Signature
 - MCP
 - Dropbox
-apis: []
+apis:
+- name: DocSend MCP Server
+  description: >-
+    DocSend's hosted Model Context Protocol server — the only programmatic surface DocSend
+    publishes. An MCP client POSTs Streamable-HTTP JSON-RPC to https://docsend.com/mcp
+    (also reachable at https://mcp.docsend.com/mcp) with an OAuth 2.0 bearer token. The
+    authorization surface is fully machine-discoverable: RFC 8414 authorization-server
+    metadata, RFC 9728 protected-resource metadata, RFC 7591 dynamic client registration
+    and mandatory PKCE (S256). Five resource scopes are advertised — documents:read,
+    spaces:read, spaces:write, analytics:read, contacts:read — so the surface spans
+    documents, Spaces (virtual data rooms), viewer analytics and contacts, with Spaces the
+    only writable domain. The tool list is behind the bearer requirement and DocSend
+    publishes no MCP documentation, so tools must be discovered after authorizing.
+  humanURL: https://www.docsend.com/
+  baseURL: https://docsend.com/mcp
+  tags:
+  - MCP
+  - Agents
+  - Document Sharing
+  - Data Room
+  - Analytics
+  properties:
+  - type: MCPServer
+    url: mcp/docsend-mcp.yml
+  - type: Authentication
+    url: authentication/docsend-authentication.yml
+  - type: OAuthScopes
+    url: scopes/docsend-scopes.yml
+  - type: RateLimits
+    url: rate-limits/docsend-rate-limits.yml
+  x-humanurl-note: >-
+    DocSend publishes no documentation page for this API — no developer portal, no API
+    reference, no MCP setup guide on any readable host. humanURL points at the product the
+    API serves, which is the closest human-readable page that genuinely exists. No
+    Documentation / DeveloperPortal / APIReference pointer is emitted for this repo,
+    because none of those pages exist.
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
@@ -64,17 +110,47 @@ common:
 - type: Conformance
   url: conformance/docsend-conformance.yml
 - type: Compliance
-  url: security/docsend-trust-center.yml
+  url: https://www.docsend.com/trust-center/compliance
 - type: TrustCenter
   url: security/docsend-trust-center.yml
 - type: DomainSecurity
   url: security/docsend-domain-security.yml
 - type: LLMsTxt
   url: llms/docsend-llms.txt
+- type: Lifecycle
+  url: lifecycle/docsend-lifecycle.yml
+- type: StatusPage
+  url: https://status.dropbox.com/
+- type: Packages
+  url: packages/docsend-packages.yml
+- type: Plans
+  url: plans/docsend-plans-pricing.yml
+- type: RateLimits
+  url: rate-limits/docsend-rate-limits.yml
+- type: VulnerabilityDisclosure
+  url: security/docsend-vulnerability-disclosure.yml
+- type: Security
+  url: https://app.intigriti.com/programs/dropbox/dropbox-vdp
 - type: Website
   url: https://www.docsend.com
+- type: Pricing
+  url: https://www.docsend.com/pricing/
+- type: SignUp
+  url: https://www.docsend.com/signup
+- type: Login
+  url: https://docsend.com/login
+- type: TermsOfService
+  url: https://www.docsend.com/terms-of-service/
+- type: PrivacyPolicy
+  url: https://www.docsend.com/privacy-policy
+- type: Support
+  url: https://help.docsend.com/hc/en-us
+- type: Blog
+  url: https://www.docsend.com/blog
+- type: GitHubOrganization
+  url: https://github.com/docsend
 x-enrichment:
-  date: '2026-07-19'
-  status: backfilled
+  date: '2026-08-14'
+  status: enriched
+  artifacts_added: 9
   pass: local-v1
-  note: backfilled from .gitignore signal + verified work evidence
