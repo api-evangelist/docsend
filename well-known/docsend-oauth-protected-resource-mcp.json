@@ -1,0 +1,1 @@
+{"resource":"https:\/\/docsend.com\/mcp","authorization_servers":["https:\/\/docsend.com"],"scopes_supported":["documents:read","spaces:read","spaces:write","analytics:read","contacts:read"],"bearer_methods_supported":["header"]}

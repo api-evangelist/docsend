@@ -1,0 +1,49 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  registry searches on npm (registry.npmjs.org search "docsend"), PyPI
+  (pypi.org/pypi/<name>/json), RubyGems (rubygems.org/api/v1/search.json) and the
+  github.com/docsend organization (api.github.com/orgs/docsend/repos, 46 public repos)
+official_count: 0
+packages: []
+community_packages:
+- language: python
+  registry: pypi
+  name: docsend
+  url: https://pypi.org/project/docsend/
+  version: 0.2.0
+  published: '2019-10-10'
+  official: false
+  author: banteg
+  note: >-
+    Third-party utility that converts a DocSend viewer link to PDF or a PNG sequence by
+    scraping the viewer. Not a DocSend client library and not published by DocSend. Last
+    release 2019-10-10 — nearly seven years stale.
+- language: javascript
+  registry: npm
+  name: docs-scraper
+  url: https://www.npmjs.com/package/docs-scraper
+  version: 1.0.6
+  published: '2026-07-26'
+  official: false
+  publisher: chrisling-dev
+  note: >-
+    Third-party scraper for DocSend, Notion and similar hosted document viewers. Not
+    published by DocSend.
+github_organization:
+  url: https://github.com/docsend
+  public_repos: 46
+  first_party: true
+  contains_sdk: false
+  note: >-
+    The github.com/docsend organization is real and is DocSend's, but every public repo is
+    a fork of a general Ruby/Rails/Heroku dependency (delayed_job, elasticsearch-rails,
+    shoulda-matchers, a stack of heroku-buildpack-* forks). There is no client library, no
+    SDK, and no API-facing code of any kind. Most were last pushed 2016-2023.
+notes: >-
+  DocSend publishes no first-party SDK in any language, and no first-party package exists
+  in any registry probed. This is consistent with the rest of the profile: DocSend has no
+  public REST API to wrap. Its only programmatic surface is the OAuth-gated hosted MCP
+  server at https://docsend.com/mcp, which is called over HTTP by an MCP client and needs
+  no vendor SDK. No `SDKs` pointer is emitted for this artifact because there is no
+  official client library to point at — an honest zero, not an unchecked one.

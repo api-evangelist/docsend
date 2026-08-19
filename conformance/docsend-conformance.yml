@@ -1,15 +1,23 @@
-generated: '2026-07-18'
+generated: '2026-08-14'
 method: searched
 source: >-
-  RFC 8414 metadata at docsend.com + mcp.docsend.com; MCP auth challenge on
-  mcp.docsend.com/mcp; trust-center compliance keywords (security/docsend-trust-center.yml)
+  RFC 8414 metadata on docsend.com + mcp.docsend.com; RFC 9728 protected-resource metadata
+  at https://docsend.com/.well-known/oauth-protected-resource/mcp; the MCP auth challenge
+  on https://docsend.com/mcp; the DocSend trust center
+  (security/docsend-trust-center.yml); Dropbox security.txt
 standards:
 - id: oauth2
   conforms: true
   evidence: OAuth 2.0 authorization server with authorize/token/revoke endpoints
 - id: rfc8414-oauth-authorization-server-metadata
   conforms: true
-  evidence: /.well-known/oauth-authorization-server returns 200 with issuer + endpoints
+  evidence: /.well-known/oauth-authorization-server returns 200 with issuer + endpoints on both hosts
+- id: rfc9728-oauth-protected-resource-metadata
+  conforms: true
+  evidence: >-
+    /.well-known/oauth-protected-resource/mcp returns 200 with resource, authorization_servers,
+    scopes_supported and bearer_methods_supported; the 401 WWW-Authenticate challenge carries the
+    matching resource_metadata parameter. New since 2026-07-18, when this path returned 404.
 - id: rfc7591-dynamic-client-registration
   conforms: true
   evidence: registration_endpoint https://docsend.com/oauth/register advertised
@@ -21,13 +29,42 @@ standards:
   evidence: revocation_endpoint https://docsend.com/oauth/revoke advertised
 - id: model-context-protocol
   conforms: true
-  evidence: hosted MCP server at https://mcp.docsend.com/mcp with mcp:read/mcp:write scopes
+  evidence: >-
+    hosted MCP server at https://docsend.com/mcp (also reachable at https://mcp.docsend.com/mcp)
+    with the five-scope authorization model; protocol version not observable anonymously
 - id: oidc
   conforms: false
-  evidence: /.well-known/openid-configuration returns 404
+  evidence: /.well-known/openid-configuration returns 404 on both hosts
+- id: rfc9116-security-txt
+  conforms: false
+  evidence: /.well-known/security.txt returns 404 on docsend.com and mcp.docsend.com
+- id: rfc9727-api-catalog
+  conforms: false
+  evidence: /.well-known/api-catalog returns 404 on both hosts
+- id: a2a-agent-card
+  conforms: false
+  evidence: /.well-known/agent-card.json and /.well-known/agent.json both 404 on every DocSend host
+- id: openapi
+  conforms: false
+  evidence: >-
+    no OpenAPI or Swagger document at any probed location on docsend.com, api.docsend.com,
+    mcp.docsend.com or the marketing host; DocSend publishes no public REST API
+- id: soc2
+  conforms: true
+  evidence: SOC 2 (annual third-party audit, report on request) — see security/docsend-trust-center.yml
+- id: iso-27001
+  conforms: true
+  evidence: ISO/IEC 27001 listed in the DocSend trust center compliance set
 - id: pci-dss
   conforms: true
-  evidence: PCI DSS referenced on docsend.com (see security/docsend-trust-center.yml)
+  evidence: PCI DSS listed in the DocSend trust center and badged in the docsend.com footer
+- id: hipaa
+  conforms: true
+  evidence: HIPAA listed in the DocSend trust center compliance set
 - id: gdpr
   conforms: true
-  evidence: GDPR referenced on docsend.com (see security/docsend-trust-center.yml)
+  evidence: GDPR listed in the DocSend trust center and badged in the docsend.com footer
+compliance_note: >-
+  The certification set is published by DocSend on its own domain but is the Dropbox
+  compliance program, DocSend having been a Dropbox product since 2021. See the
+  ownership_note in security/docsend-trust-center.yml.

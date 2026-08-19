@@ -1,37 +1,76 @@
-generated: '2026-07-18'
+generated: '2026-08-14'
 method: searched
 source: >-
-  https://docsend.com/.well-known/oauth-authorization-server (RFC 8414) +
-  WWW-Authenticate challenge on https://mcp.docsend.com/mcp
+  https://docsend.com/.well-known/oauth-authorization-server (RFC 8414),
+  https://mcp.docsend.com/.well-known/oauth-authorization-server (RFC 8414),
+  https://docsend.com/.well-known/oauth-protected-resource/mcp (RFC 9728), and the
+  WWW-Authenticate challenge returned by https://docsend.com/mcp and
+  https://mcp.docsend.com/mcp
 summary:
   types: [oauth2]
   oauth2_flows: [authorizationCode, clientCredentials, refreshToken]
   pkce: S256
   dynamic_client_registration: true
+  token_endpoint_auth_methods: [none]
+  bearer_methods: [header]
+  protected_resource_metadata: true
 schemes:
 - name: OAuth2
   type: oauth2
-  sources: [well-known/docsend-oauth-authorization-server.json]
+  sources:
+  - well-known/docsend-oauth-authorization-server.json
+  - well-known/docsend-mcp-host-oauth-authorization-server.json
+  - well-known/docsend-oauth-protected-resource-mcp.json
   flows:
   - flow: authorizationCode
     authorizationUrl: https://docsend.com/oauth/authorize
     tokenUrl: https://docsend.com/oauth/token
     refreshUrl: https://docsend.com/oauth/token
     scopes:
-      mcp:read: Read access via the DocSend MCP server
-      mcp:write: Write access via the DocSend MCP server
+      documents:read: Read access to DocSend documents and share links
+      spaces:read: Read access to DocSend Spaces (virtual data rooms)
+      spaces:write: Write access to DocSend Spaces (virtual data rooms)
+      analytics:read: Read access to viewer/page engagement analytics
+      contacts:read: Read access to contacts / visitors
   - flow: clientCredentials
     tokenUrl: https://docsend.com/oauth/token
     scopes:
-      mcp:read: Read access via the DocSend MCP server
-      mcp:write: Write access via the DocSend MCP server
+      documents:read: Read access to DocSend documents and share links
+      spaces:read: Read access to DocSend Spaces (virtual data rooms)
+      spaces:write: Write access to DocSend Spaces (virtual data rooms)
+      analytics:read: Read access to viewer/page engagement analytics
+      contacts:read: Read access to contacts / visitors
   registration_endpoint: https://docsend.com/oauth/register
   revocation_endpoint: https://docsend.com/oauth/revoke
   code_challenge_methods: [S256]
   token_endpoint_auth_methods: [none]
+issuers:
+- issuer: https://docsend.com
+  metadata: https://docsend.com/.well-known/oauth-authorization-server
+- issuer: https://mcp.docsend.com
+  metadata: https://mcp.docsend.com/.well-known/oauth-authorization-server
+  note: >-
+    Advertises the same endpoints on docsend.com; the RFC 9728 resource document names
+    https://docsend.com as the sole authorization server.
+protected_resource:
+  resource: https://docsend.com/mcp
+  metadata: https://docsend.com/.well-known/oauth-protected-resource/mcp
+  authorization_servers: [https://docsend.com]
+  bearer_methods_supported: [header]
+docs: null
 notes: >-
-  DocSend exposes an OAuth 2.0 authorization server (RFC 8414 discovery) with
-  dynamic client registration (RFC 7591) and mandatory PKCE (S256). It currently
-  gates the hosted MCP server (mcp:read / mcp:write scopes). No general public
-  REST API OpenAPI was found; this profile derives from the published OAuth
-  discovery metadata.
+  DocSend operates a full OAuth 2.0 authorization server with RFC 8414 discovery, RFC 7591
+  dynamic client registration, RFC 7636 PKCE (S256 mandatory), RFC 7009 token revocation
+  and RFC 9728 protected-resource metadata. token_endpoint_auth_methods_supported is
+  ["none"], i.e. public clients registering dynamically and authenticating with PKCE —
+  the standard MCP client shape. This authorization surface exists to gate the hosted MCP
+  server; DocSend publishes no general-purpose REST API and no OpenAPI, and no readable
+  authentication documentation page (www.docsend.com and help.docsend.com return HTTP 403
+  to non-browser clients), so this profile is built entirely from the machine-readable
+  discovery documents DocSend serves.
+changes_since_last_round:
+  checked: '2026-08-14'
+  previous: '2026-07-18'
+  notes: >-
+    Scopes changed from mcp:read / mcp:write to five resource-scoped values, and RFC 9728
+    protected-resource metadata appeared (it 404d on the previous pass).

@@ -1,0 +1,56 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  https://status.dropbox.com/api/v2/summary.json (Statuspage components include a named
+  "DocSend" component and a named "MCP Server" component); live probes of
+  status.docsend.com and docsend.statuspage.io; live probes of the DocSend MCP endpoint
+versioning:
+  scheme: mcp-protocol-version
+  current: null
+  docs: null
+  note: >-
+    DocSend publishes no API version policy, because it publishes no versioned public API.
+    The MCP endpoint negotiates a protocol version in the `initialize` handshake, which is
+    OAuth-gated and returned HTTP 401 anonymously, so the supported MCP protocol version(s)
+    could not be observed.
+deprecation:
+  policy_url: null
+  sunset_header: false
+  note: >-
+    No deprecation policy and no RFC 8594 Sunset/Deprecation header support found. Between
+    2026-07-18 and 2026-08-14 DocSend removed the mcp:read and mcp:write OAuth scopes and
+    replaced them with five resource-scoped scopes, with no announcement, no changelog
+    entry, and no deprecation window that this pipeline could find — a breaking change to
+    every previously-issued token's scope set, shipped silently.
+sla:
+  url: null
+  uptime_target: null
+status_page:
+  url: https://status.dropbox.com/
+  provider: Atlassian Statuspage
+  covers_docsend: true
+  components:
+  - name: DocSend
+    id: jd1xbk17qkvv
+  - name: MCP Server
+    id: gbn95109q3c3
+  - name: API
+    id: g0f37btkjhcq
+  api: https://status.dropbox.com/api/v2/summary.json
+  note: >-
+    DocSend does not run a status page on its own domain — status.docsend.com resolves to
+    the shared CloudFront distribution and returns HTTP 403, and docsend.statuspage.io does
+    not exist (it redirects to statuspage.io). DocSend's operational status is published on
+    the Dropbox status page instead, which is correct and expected: DocSend has been a
+    Dropbox product since the 2021 acquisition. That page carries a first-class, named
+    "DocSend" component, so the status of the product genuinely is published — it is just
+    published under the parent brand's domain.
+deprecated_operations: []
+x-evidence:
+- url: https://status.dropbox.com/api/v2/summary.json
+  status: 200
+- url: https://status.docsend.com/
+  status: 403
+- url: https://docsend.statuspage.io/api/v2/status.json
+  status: 302
+  note: Redirects to https://www.statuspage.io — the subdomain is not a provisioned page.

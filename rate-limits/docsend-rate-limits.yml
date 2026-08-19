@@ -1,0 +1,30 @@
+generated: '2026-08-14'
+method: searched
+source: >-
+  live probes of https://docsend.com/mcp and https://mcp.docsend.com/mcp; review of the
+  DocSend pricing, plan and trust-center pages; DocSend publishes no developer
+  documentation host
+limit_count: 0
+limits: []
+headers_observed: []
+status_on_exhaustion: null
+notes: >-
+  DocSend publishes no rate-limit documentation, because it publishes no developer
+  documentation at all — there is no developer portal, no API reference, and no readable
+  docs host. The only callable surface is the OAuth-gated MCP endpoint, and its anonymous
+  401 responses carry no RateLimit-*, X-RateLimit-* or Retry-After headers, so no runtime
+  rate-limit signal could be observed either. An honest zero: not "we did not look", but
+  "nothing is published and nothing is emitted on the wire anonymously".
+x-evidence:
+- url: https://docsend.com/mcp
+  status: 401
+  note: >-
+    POST tools/list. Response headers carry WWW-Authenticate, HSTS, CSP, NEL and
+    x-request-id, but no rate-limit family header of any kind.
+- url: https://mcp.docsend.com/mcp
+  status: 401
+  note: Same challenge, same absence of rate-limit headers.
+- url: https://docsend.com/api-docs
+  status: 404
+- url: https://docsend.com/developers
+  status: 404

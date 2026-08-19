@@ -1,0 +1,55 @@
+generated: '2026-08-14'
+method: searched
+source: https://zapier.com/apps/docsend/integrations
+spec_type: null
+spec_note: >-
+  DocSend publishes no AsyncAPI document. Probes for /asyncapi.yaml, /asyncapi.json and an
+  event-catalog page found nothing, and there is no developer documentation host on which
+  one could live.
+direct_webhooks:
+  available: false
+  note: >-
+    DocSend does not publish a webhook subscription API, a webhook endpoint registry, a
+    signing/verification scheme, or a retry policy. A developer cannot subscribe a URL to a
+    DocSend event directly. Aggregator sites claim DocSend offers "REST APIs and webhooks";
+    that claim is not supported by anything DocSend publishes and is not recorded here.
+event_surface:
+  delivery: partner-platform
+  platform: Zapier
+  provider_docs: https://help.docsend.com/hc/en-us/articles/360010202854-Zapier-Integration-Overview
+  listing: https://zapier.com/apps/docsend/integrations
+  note: >-
+    DocSend's events reach developers only through its Zapier app. The trigger names below
+    are read from Zapier's DocSend app listing and are the only public enumeration of what
+    DocSend emits. To reach a URL, a consumer must chain DocSend -> Zapier -> "Webhooks by
+    Zapier"; there is no first-party path.
+events:
+- name: New Visit
+  description: Someone visits a shared DocSend link.
+- name: New Visit to Document
+  description: Someone visits a specific document.
+- name: New Link Created
+  description: A new share link is created.
+- name: New Signed Document
+  description: Someone signs a document (NDA, agreement) via DocSend eSignature.
+- name: New Space Created
+  description: A new Space (virtual data room) is created.
+- name: New Space Visit
+  description: Someone visits a Space.
+- name: New Space Download
+  description: Someone downloads from a Space.
+event_count: 7
+scoring_note: >-
+  NO `Webhooks` POINTER IS EMITTED for this artifact, deliberately. The
+  `webhooks_advertised` check asserts that the provider advertises a webhook surface
+  developers can subscribe to. DocSend does not — it exposes events exclusively through a
+  third-party automation platform. Recording the events without claiming a webhook surface
+  keeps the finding useful without crediting DocSend for something it does not ship. If
+  DocSend later publishes a direct webhook API, upgrade this file and add the pointer then.
+x-evidence:
+- url: https://zapier.com/apps/docsend/integrations
+  status: 200
+- url: https://docsend.com/asyncapi.yaml
+  status: 404
+- url: https://docsend.com/api-docs
+  status: 404

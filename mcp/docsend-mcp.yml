@@ -1,32 +1,83 @@
-generated: '2026-07-18'
+generated: '2026-08-14'
 method: searched
 status: published
 source: >-
-  live probe of https://mcp.docsend.com/mcp (HTTP 401 with RFC 9728-style
-  WWW-Authenticate Bearer challenge) + RFC 8414 metadata at
-  https://mcp.docsend.com/.well-known/oauth-authorization-server
+  live probes of https://mcp.docsend.com/mcp and https://docsend.com/mcp (both HTTP 401
+  with an RFC 9728 WWW-Authenticate Bearer challenge) + RFC 8414 authorization-server
+  metadata on docsend.com and mcp.docsend.com + RFC 9728 protected-resource metadata at
+  https://docsend.com/.well-known/oauth-protected-resource/mcp
 server:
   name: docsend
-  transport: http            # Streamable HTTP JSON-RPC (POST /mcp)
-  url: https://mcp.docsend.com/mcp
-  hosting: Heroku
+  transport: http
+  url: https://docsend.com/mcp
+  alternate_url: https://mcp.docsend.com/mcp
+  resource_identifier: https://docsend.com/mcp
+  hosting: Heroku (behind CloudFront)
+deployment:
+  mode: remote
+  endpoint: https://docsend.com/mcp
+  auth: oauth
+  verified: probed
+  probe: gated
+  checked: '2026-08-14'
+  note: >-
+    Both https://docsend.com/mcp and https://mcp.docsend.com/mcp answer an MCP POST with
+    HTTP 401 and the same WWW-Authenticate challenge. The RFC 9728 protected-resource
+    document names https://docsend.com/mcp as the canonical resource identifier, so that
+    is recorded as the endpoint. No stdio package is published — this is a remote-only
+    agent surface.
 auth:
   type: oauth2
-  required: true             # unauthenticated initialize returns HTTP 401
+  required: true
   www_authenticate: >-
-    Bearer realm="mcp", resource_metadata="https://docsend.com/.well-known/oauth-authorization-server", scope="mcp:read mcp:write"
+    Bearer resource_metadata="https://docsend.com/.well-known/oauth-protected-resource/mcp",
+    scope="documents:read spaces:read spaces:write analytics:read contacts:read"
+  protected_resource_metadata: https://docsend.com/.well-known/oauth-protected-resource/mcp
   authorization_server_metadata:
     docsend.com: https://docsend.com/.well-known/oauth-authorization-server
     mcp.docsend.com: https://mcp.docsend.com/.well-known/oauth-authorization-server
+  authorization_servers:
+  - https://docsend.com
   authorization_endpoint: https://docsend.com/oauth/authorize
   token_endpoint: https://docsend.com/oauth/token
-  registration_endpoint: https://docsend.com/oauth/register   # dynamic client registration (RFC 7591)
+  registration_endpoint: https://docsend.com/oauth/register
   revocation_endpoint: https://docsend.com/oauth/revoke
-  grant_types: [authorization_code, client_credentials, refresh_token]
-  code_challenge_methods: [S256]                              # PKCE required
-  scopes: [mcp:read, mcp:write]
+  grant_types:
+  - authorization_code
+  - client_credentials
+  - refresh_token
+  code_challenge_methods:
+  - S256
+  bearer_methods_supported:
+  - header
+  scopes:
+  - documents:read
+  - spaces:read
+  - spaces:write
+  - analytics:read
+  - contacts:read
 tools: []
 tools_note: >-
-  The tool list is behind the OAuth bearer requirement (mcp:read / mcp:write);
-  it could not be enumerated without an authorized token. The server is
-  confirmed live and published (401 auth challenge, not 404).
+  tools/list and initialize both return HTTP 401 without a bearer token, so the live tool
+  set and its inputSchemas could not be enumerated. DocSend publishes no llms.txt and no
+  MCP tool documentation on a readable host, so there is no anonymous fallback list —
+  enumerating the tools requires an authenticated OAuth token. The server is confirmed
+  live and published (401 auth challenge with a conformant RFC 9728 challenge, not a 404).
+scope_surface_inference:
+  note: >-
+    Not a tool list. The five advertised OAuth scopes are the only anonymous evidence of
+    what the server exposes, and they name four resource domains — documents, spaces
+    (DocSend's virtual data rooms), analytics (viewer/page engagement), and contacts
+    (visitors). Only spaces carries a write scope; documents, analytics and contacts are
+    read-only, so the published agent surface is predominantly read-oriented.
+  read_domains: [documents, spaces, analytics, contacts]
+  write_domains: [spaces]
+changes_since_last_round:
+  checked: '2026-08-14'
+  previous: '2026-07-18'
+  scopes_before: [mcp:read, mcp:write]
+  scopes_after: [documents:read, spaces:read, spaces:write, analytics:read, contacts:read]
+  notes: >-
+    DocSend replaced two coarse server-level scopes with five resource-scoped ones and
+    added RFC 9728 protected-resource metadata (previously 404). This is a real
+    improvement in agent-facing authorization granularity, observed on the wire.

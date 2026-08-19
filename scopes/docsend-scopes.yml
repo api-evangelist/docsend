@@ -1,8 +1,16 @@
-generated: '2026-07-18'
+generated: '2026-08-14'
 method: searched
 source: >-
-  https://docsend.com/.well-known/oauth-authorization-server (scopes_supported)
-  + WWW-Authenticate scope challenge on https://mcp.docsend.com/mcp
+  scopes_supported in https://docsend.com/.well-known/oauth-authorization-server and
+  https://mcp.docsend.com/.well-known/oauth-authorization-server, plus scopes_supported in
+  https://docsend.com/.well-known/oauth-protected-resource/mcp and the scope="..." value in
+  the WWW-Authenticate challenge returned by https://docsend.com/mcp
+docs: null
+docs_note: >-
+  DocSend publishes no readable scope/permission reference page. www.docsend.com and
+  help.docsend.com return HTTP 403 (Cloudflare bot challenge) to non-browser clients, so
+  the scope descriptions below are honest readings of the scope names themselves against
+  DocSend's product vocabulary, not copy from a provider scopes page.
 schemes:
 - name: OAuth2
   source: well-known/docsend-oauth-authorization-server.json
@@ -13,11 +21,58 @@ schemes:
   - flow: clientCredentials
     tokenUrl: https://docsend.com/oauth/token
 scopes:
-- scope: mcp:read
-  description: Read access exposed through the DocSend hosted MCP server.
+- scope: documents:read
+  description: Read access to DocSend documents and the links that share them.
+  access: read
+  domain: documents
   flows: [authorizationCode, clientCredentials]
-  sources: [well-known/docsend-oauth-authorization-server.json]
-- scope: mcp:write
-  description: Write access exposed through the DocSend hosted MCP server.
+  sources:
+  - well-known/docsend-oauth-authorization-server.json
+  - well-known/docsend-oauth-protected-resource-mcp.json
+- scope: spaces:read
+  description: Read access to DocSend Spaces (virtual data rooms) and their contents.
+  access: read
+  domain: spaces
   flows: [authorizationCode, clientCredentials]
-  sources: [well-known/docsend-oauth-authorization-server.json]
+  sources:
+  - well-known/docsend-oauth-authorization-server.json
+  - well-known/docsend-oauth-protected-resource-mcp.json
+- scope: spaces:write
+  description: >-
+    Write access to DocSend Spaces (virtual data rooms) — the only write scope DocSend
+    advertises on this resource.
+  access: write
+  domain: spaces
+  flows: [authorizationCode, clientCredentials]
+  sources:
+  - well-known/docsend-oauth-authorization-server.json
+  - well-known/docsend-oauth-protected-resource-mcp.json
+- scope: analytics:read
+  description: Read access to DocSend viewer analytics (visits, page-by-page engagement).
+  access: read
+  domain: analytics
+  flows: [authorizationCode, clientCredentials]
+  sources:
+  - well-known/docsend-oauth-authorization-server.json
+  - well-known/docsend-oauth-protected-resource-mcp.json
+- scope: contacts:read
+  description: Read access to DocSend contacts / visitors captured against shared links.
+  access: read
+  domain: contacts
+  flows: [authorizationCode, clientCredentials]
+  sources:
+  - well-known/docsend-oauth-authorization-server.json
+  - well-known/docsend-oauth-protected-resource-mcp.json
+resource:
+  identifier: https://docsend.com/mcp
+  authorization_servers: [https://docsend.com]
+  bearer_methods_supported: [header]
+changes_since_last_round:
+  checked: '2026-08-14'
+  previous: '2026-07-18'
+  removed: [mcp:read, mcp:write]
+  added: [documents:read, spaces:read, spaces:write, analytics:read, contacts:read]
+  notes: >-
+    The coarse mcp:read / mcp:write pair recorded on 2026-07-18 no longer appears in any
+    DocSend discovery document or in the live WWW-Authenticate challenge. It has been
+    replaced by five resource-scoped scopes.

@@ -1,4 +1,4 @@
-generated: '2026-07-18'
+generated: '2026-08-14'
 method: searched
 source: live probes of /.well-known/ on docsend.com + mcp.docsend.com
 hosts:
@@ -7,24 +7,78 @@ hosts:
   - path: /.well-known/oauth-authorization-server   # RFC 8414 authorization server metadata
     status: 200
     file: docsend-oauth-authorization-server.json
+  - path: /.well-known/oauth-protected-resource/mcp  # RFC 9728 protected resource metadata
+    status: 200
+    file: docsend-oauth-protected-resource-mcp.json
+  - path: /.well-known/oauth-protected-resource      # RFC 9728 at the bare path
+    status: 404
   - path: /.well-known/security.txt                  # RFC 9116
     status: 404
   - path: /.well-known/openid-configuration          # OIDC discovery
-    status: 404
-  - path: /.well-known/oauth-protected-resource       # RFC 9728
     status: 404
   - path: /.well-known/api-catalog                    # RFC 9727
     status: 404
   - path: /.well-known/ai-plugin.json
     status: 404
+  - path: /.well-known/agent-card.json                # A2A 1.0.0
+    status: 404
+  - path: /.well-known/agent.json                     # A2A pre-0.3 legacy
+    status: 404
 - host: https://mcp.docsend.com
   documents:
-  - path: /.well-known/oauth-authorization-server   # RFC 8414 (issuer mcp.docsend.com)
+  - path: /.well-known/oauth-authorization-server   # RFC 8414 (issuer https://mcp.docsend.com)
     status: 200
+    file: docsend-mcp-host-oauth-authorization-server.json
   - path: /.well-known/oauth-protected-resource
     status: 404
+  - path: /.well-known/security.txt
+    status: 404
+  - path: /.well-known/openid-configuration
+    status: 404
+  - path: /.well-known/api-catalog
+    status: 404
+  - path: /.well-known/ai-plugin.json
+    status: 404
+  - path: /.well-known/agent-card.json
+    status: 404
+  - path: /.well-known/agent.json
+    status: 404
+robots:
+  url: https://www.docsend.com/robots.txt
+  status: 200
+  policy: 'User-Agent: * / Allow: /'
+  sitemaps_point_to: https://www.docsend.lol/
+  defect: >-
+    Every one of the 16 Sitemap: lines in the production robots.txt points at
+    www.docsend.lol, not www.docsend.com. docsend.lol is DocSend's own host (it resolves to
+    a Heroku dyno, metric-macaw-lpjchjzh97lt77ta7t0tbxdx.herokudns.com) and serves the
+    sitemap index with HTTP 200, so this is not a hijack — it looks like a staging/alt-TLD
+    value that shipped to production. The effect is real: a crawler following
+    www.docsend.com/robots.txt is sent to a different domain for every URL DocSend wants
+    indexed, and www.docsend.com/sitemap.xml itself returns 404. Worth reporting to the
+    provider.
+  evidence:
+  - {url: 'https://www.docsend.com/robots.txt', status: 200}
+  - {url: 'https://www.docsend.lol/sitemap_index.xml', status: 200}
+  - {url: 'https://www.docsend.com/sitemap.xml', status: 404}
+llms_txt:
+  url: https://www.docsend.com/llms.txt
+  status: 404
+  note: No provider-published llms.txt on any DocSend host.
+changes_since_last_round:
+  checked: '2026-08-14'
+  previous: '2026-07-18'
+  notes: >-
+    Two real changes since the 2026-07-18 round. (1) DocSend now publishes RFC 9728
+    protected-resource metadata at /.well-known/oauth-protected-resource/mcp (HTTP 200,
+    resource https://docsend.com/mcp) — it 404d on the last pass. (2) The advertised
+    scope set was replaced: the coarse mcp:read / mcp:write pair is gone and both the
+    authorization-server metadata and the WWW-Authenticate challenge now advertise five
+    resource-scoped scopes — documents:read, spaces:read, spaces:write, analytics:read,
+    contacts:read.
 notes: >-
-  DocSend publishes RFC 8414 OAuth authorization server metadata advertising
-  mcp:read / mcp:write scopes, dynamic client registration (RFC 7591) and PKCE
-  (S256) — the discovery surface backing its hosted MCP server at
-  https://mcp.docsend.com/mcp. No security.txt, OIDC, or api-catalog present.
+  DocSend publishes RFC 8414 OAuth authorization server metadata on both docsend.com
+  (issuer https://docsend.com) and mcp.docsend.com (issuer https://mcp.docsend.com),
+  plus RFC 9728 protected-resource metadata for the MCP resource. Dynamic client
+  registration (RFC 7591) and PKCE (S256) are advertised. No security.txt, no OIDC
+  discovery, no api-catalog, and no A2A agent card on either host.

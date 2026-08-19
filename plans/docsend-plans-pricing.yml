@@ -1,0 +1,98 @@
+generated: '2026-08-14'
+method: searched
+source: https://www.docsend.com/pricing/
+currency: USD
+billing_periods: [monthly, yearly]
+billing_note: >-
+  The pricing page offers a "Billed monthly" / "Billed yearly (Save up to 40%)" toggle.
+  The figures captured below are the monthly-billed prices rendered in the default state;
+  the yearly-billed figures are rendered client-side and were not readable in the served
+  HTML, so they are recorded as null rather than guessed.
+plan_count: 3
+self_serve: true
+free_trial: true
+plans:
+- name: Standard
+  slug: standard
+  positioning: For multi-file secure sharing
+  price: 30
+  currency: USD
+  unit: per user
+  period: month
+  price_annual: null
+  url: https://www.docsend.com/plans/standard/
+  included:
+    users: 1
+    visitors: unlimited
+    esignature: unlimited
+  features:
+  - Multi-file sharing
+  - Video and rich media analytics
+  - File requests
+  - Customizable branding
+  - Unlimited eSignature
+  - Basic sharing controls
+  - Document level analytics
+  - Unlimited visitors
+- name: Advanced
+  slug: advanced
+  positioning: For advanced security
+  price: 150
+  currency: USD
+  unit: flat
+  period: month
+  price_annual: null
+  url: https://www.docsend.com/plans/advanced/
+  included:
+    users: 3
+  features:
+  - All Standard features
+  - Lightweight data rooms (Spaces)
+  - Email authentication for visitors
+  - Allow/block visitors lists
+  - NDAs and gating agreements
+  - Folder and file level security
+  - Dynamic watermarking
+- name: Advanced Data Rooms
+  slug: advanced-data-rooms
+  positioning: For complete deal control
+  price: 180
+  currency: USD
+  unit: flat
+  period: month
+  price_annual: null
+  url: https://www.docsend.com/pricing/
+  included:
+    users: 3
+  features:
+  - All Advanced features
+  - Enhanced data rooms (Spaces)
+  - Group visitor permissions
+  - Due diligence tracking
+  - Data room audit log
+  - Automatic file indexing
+  - Data room analytics
+  - Priority email support
+  - 2X capacity per data room
+enterprise:
+  available: true
+  pricing: contact-sales
+  note: '"Looking for more? Contact us for customizable solutions built to your specific needs."'
+api_access:
+  documented_per_tier: false
+  note: >-
+    The pricing page and the plan comparison table say nothing about API or MCP access at
+    any tier. DocSend publishes no public REST API, and the hosted MCP server at
+    https://docsend.com/mcp is not named on any pricing or plan page, so which plans can
+    authorize an MCP client is undocumented.
+x-evidence:
+- url: https://www.docsend.com/pricing/
+  status: 200
+  note: >-
+    Returns HTTP 403 (Cloudflare bot challenge) to curl and to standard fetchers; served
+    HTTP 200 to a plain urllib client with a descriptive bot User-Agent. Prices above were
+    read from that 200 response body on 2026-08-14.
+- url: https://www.docsend.com/plans/standard/
+  status: 200
+- url: https://www.docsend.com/plans/advanced/
+  status: 200
