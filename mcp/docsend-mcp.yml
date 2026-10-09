@@ -80,3 +80,23 @@ changes_since_last_round:
   notes: DocSend replaced two coarse server-level scopes with five resource-scoped ones and added RFC
     9728 protected-resource metadata (previously 404). This is a real improvement in agent-facing authorization
     granularity, observed on the wire.
+rfc9728:
+  endpoint: https://mcp.docsend.com/mcp
+  metadata_url: https://docsend.com/.well-known/oauth-protected-resource/mcp
+  discovered_via: WWW-Authenticate resource_metadata on an anonymous POST initialize
+  fetched: '2026-09-25'
+  http_status: 200
+  content_type: application/json
+  document:
+    resource: https://docsend.com/mcp
+    authorization_servers:
+    - https://docsend.com
+    scopes_supported:
+    - documents:read
+    - files:write
+    - spaces:read
+    - spaces:write
+    - analytics:read
+    - contacts:read
+    bearer_methods_supported:
+    - header
